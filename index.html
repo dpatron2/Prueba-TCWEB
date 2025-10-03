@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Extensión TCWEB - Prueba</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 12px; }
+    #log { white-space: pre-wrap; border: 1px solid #ddd; padding: 8px; min-height: 120px; }
+    button { margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Extensión TCWEB — Prueba</h2>
+  <div id="log">Inicializando...</div>
+  <button id="pingBtn">Enviar mensaje a Trimble</button>
+
+  <!-- Librería oficial (CDN) que permite comunicarse con Trimble -->
+  <script src="https://components.connect.trimble.com/trimble-connect-workspace-api/index.js"></script>
+
+  <script>
+  (async function(){
+    const log = (t) => {
+      const el = document.getElementById('log');
+      el.innerText = el.innerText + "\\n" + t;
+    };
+
+    try {
+      // conecta la extensión con Trimble (window.parent = la app que la carga)
+      // La función 'connect' la entrega la librería que cargamos arriba.
+      const API = await TrimbleConnectWorkspace.connect(window.parent, (event, args) => {
+        log('[evento] ' + event + ' -> ' + JSON.stringify(args));
+        if (event === 'extension.command') {
+          log('Comando recibido: ' + args.data);
+        }
+      }, 30000);
+
+      log('✅ Conectado a Trimble');
+
+      // Definir menú que aparecerá en la izquierda de Trimble
+      const mainMenuObject = {
+        title: "Mi Extensión Prueba",
+        icon: "",
+        command: "MAIN_MENU_CMD",
+        subMenus: [
+          { title: "Saludar", command: "CMD_SALUDAR" },
+          { title: "Info Proyecto", command: "CMD_PROJECT_INFO" }
+        ]
+      };
+      await API.ui.setMenu(mainMenuObject);
+      log('✅ Menú enviado a Trimble');
+
+      // botón local: prueba de enviar status a Trimble
+      document.getElementById('pingBtn').onclick = async () => {
+        try {
+          await API.extension.setStatusMessage('Ping desde la extensión');
+          log('Mensaje de estado enviado a Trimble');
+        } catch(e) { log('Error enviando status: ' + e); }
+      };
+
+      // pedir info del proyecto (ejemplo)
+      try {
+        const project = await API.project.getCurrentProject();
+        log('Proyecto activo: ' + (project ? (project.name || project.id) : 'no disponible'));
+      } catch(e) {
+        log('No se pudo obtener proyecto: ' + e);
+      }
+
+    } catch (err) {
+      log('ERROR general: ' + err);
+      console.error(err);
+    }
+  })();
+  </script>
+</body>
+</html>

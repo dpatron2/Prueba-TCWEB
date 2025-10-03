@@ -1,0 +1,8 @@
+{
+  "icon": "https://TU_USUARIO.github.io/NOMBRE_REPO/icon.png",
+  "title": "Extensión Prueba - TuNombre",
+  "url": "https://TU_USUARIO.github.io/NOMBRE_REPO/index.html",
+  "description": "Extensión de prueba que muestra un menú y responde a comandos",
+  "configCommand": "do_config",
+  "enabled": true
+}
