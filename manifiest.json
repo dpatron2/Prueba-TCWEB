@@ -1,9 +1,10 @@
 {
-  "icon": "https://github.com/dpatron2/Prueba-TCWEB/blob/main/icon.png",
+  "icon": "https://dpatron2.github.io/Prueba-TCWEB/icon.png",
   "title": "Extensión Prueba - TuNombre",
-  "url": "https://github.com/dpatron2/Prueba-TCWEB/tree/main/index.html",
+  "url": "https://dpatron2.github.io/Prueba-TCWEB/index.html",
   "description": "Extensión de prueba que muestra un menú y responde a comandos",
   "configCommand": "do_config",
   "enabled": true
 }
+
 
